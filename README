@@ -1,0 +1,16 @@
+FILES:
+=====
+bf.sed --
+a brainfuck language interpreter written in sed.
+Input (,) and output (.) commands are implemented using
+pipe to bash, so, stictly speaking, it is not a sed-only
+solution yet.
+
+increment.sed	-- increment a number, from http://sed.sourceforge.net/grabbag/tutorials/do_it_with_sed.txt
+incr2.sed	-- the same, using lookup table to increment a digit.
+decrement.sed	-- similar.
+count.sed	-- wc written in sed by Greg Ubben.
+match-paren.sed	-- enumerate matching [] brackets.
+gentab.sh	-- generates key codes 0..127 for using as a lookup table for incrementing a symbol.
+*.bf		-- BF examples from http://en.wikipedia.org/wiki/Brainfuck
+README		-- this file.

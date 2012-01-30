@@ -90,12 +90,12 @@ s/.*(%\|)/\1/
 
 # `[' Start loop.
 /% p+\[/ {
-	# if current memory cell is zero -- jump to next ]
+	# If current memory cell is zero -- jump to next `]'.
 	#/:0,/s/% (p+)\[(.*)\]\1 / \1[\2]\1 %/
-	# ugly hack due to lack of lazy regexps.
+	# Ugly hack due to lack of lazy regexps.
+	# May nullify advantages of enumerating of brackets.
 	/:0,/ {
 		: mark
-		t mark
 		s/% (p+)\[(.*)\]\1 /% \1[\2]@\1 /
 		t mark
 		s/%//
