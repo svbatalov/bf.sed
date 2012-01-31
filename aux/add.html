@@ -1,0 +1,153 @@
+<!-- MHonArc v2.6.16 -->
+<!--X-Subject: sed script to add 2 numbers -->
+<!--X-From-R13: Oyva Ebner <nf1789Ntznvy.pbz> -->
+<!--X-Date: Thu, 10 Feb 2011 20:57:14 &#45;0500 -->
+<!--X-Message-Id: AANLkTinUFdUVXAAzSCPUw78S6ou0kCU&#45;ZLZeTzvUKSzk@mail.gmail.com -->
+<!--X-Content-Type: multipart/mixed -->
+<!--X-Reference: AANLkTikz&#45;CiQAX_f517NDkhSiQqKiqxBZg_9mNzYRxB4@mail.gmail.com -->
+<!--X-Reference: AANLkTi=kq849fnpeRffQudZKDqgtmVREmnTpBUPPU+EO@mail.gmail.com -->
+<!--X-Derived: binr1FzuMidRZ.bin -->
+<!--X-Head-End-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML//EN">
+<html><head>
+<title>sed script to add 2 numbers</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+<center>
+<table bgcolor="#000000" border="0" cellpadding="0" cellspacing="2">
+<tbody><tr><td><table bgcolor="#FFFFCC" border="0">
+<tbody><tr><td><big><b>help-gnu-utils</b></big></td></tr></tbody></table></td></tr></tbody></table>
+<small><nobr>[<a href="http://lists.gnu.org/archive/html/help-gnu-utils/">Top</a>][<a href="http://lists.gnu.org/archive/html">All Lists</a>]</nobr></small>
+<form method="get" action="/archive/cgi-bin/namazu.cgi">
+<input name="query" size="30" type="text">
+<input name="submit" value="Search" type="submit">
+<input name="idxname" value="help-gnu-utils" type="hidden">
+<a href="http://lists.gnu.org/archive/cgi-bin/namazu.cgi?idxname=help-gnu-utils">Advanced</a>
+</form>
+
+</center>
+<!--X-Body-Begin-->
+<!--X-User-Header-->
+<!--X-User-Header-End-->
+<!--X-TopPNI-->
+<hr>
+[<a href="http://lists.gnu.org/archive/html/help-gnu-utils/2011-02/msg00002.html">Date Prev</a>][Date Next][<a href="http://lists.gnu.org/archive/html/help-gnu-utils/2011-02/msg00000.html">Thread Prev</a>][Thread Next][<a href="http://lists.gnu.org/archive/html/help-gnu-utils/2011-02/index.html#00003">Date Index</a>][<a href="http://lists.gnu.org/archive/html/help-gnu-utils/2011-02/threads.html#00003">Thread Index</a>]
+
+<!--X-TopPNI-End-->
+<!--X-MsgBody-->
+<!--X-Subject-Header-Begin-->
+<h2>sed script to add 2 numbers</h2>
+<hr>
+<table border="0">
+<tbody>
+<tr>
+<td valign="top" align="right">
+<b>From</b>: </td>
+<td align="left">
+Alin Soare</td>
+</tr>
+<!--X-Subject-Header-End-->
+<!--X-Head-of-Message-->
+
+<tr>
+<td valign="top" align="right">
+<b>Subject</b>: </td>
+<td align="left">
+sed script to add 2 numbers</td>
+</tr>
+
+<tr>
+<td valign="top" align="right">
+<b>Date</b>: </td>
+<td align="left">
+Thu, 10 Feb 2011 19:49:03 +0200</td>
+</tr>
+
+</tbody>
+</table>
+<!--X-Head-of-Message-End-->
+<!--X-Head-Body-Sep-Begin-->
+<hr>
+<!--X-Head-Body-Sep-End-->
+<!--X-Body-of-Message-->
+<div class="gmail_quote"><div class="gmail_quote"><div class="im"><br>Hi,<br><br>I did write a script to add 2 natural numbers, and send it to the mailing list of sed.<br><br>Because I found no list for sed developers, I send this script to this list. I did send it to <span class="gI"><a rel="nofollow" href="mailto:address@hidden">address@hidden</a>, but that one is a private list, and cannot access it unless you subscribe the group.<br>
+<br>It is not for sure the best place to send the script that adds 2 
+numbers :)&nbsp; , but probably one of you recomment me the good place 
+where to send it.<br></span><br></div><div><div></div><div class="h5">The Hold space is used to add 2 digits . The Pattern Space is used to keep the numbers.<br>
+
+
+<br>The general steps of the algorithm are the followings<br><br>* read both numbers in PS, and keep them separated by a space<br>* LOOP as time as there are still digits to add<br>*&nbsp;&nbsp; remove the last digit of every number, and move them to the end of PS<br>
+
+
+*&nbsp;&nbsp; append PS to HS<br>*&nbsp;&nbsp; commute to HS<br>
+*&nbsp;&nbsp; if there is only 1 digit, append a '0' (a number is longer than the other)<br>*&nbsp;&nbsp; transform every digit into points (N points for the digit N)<br>*&nbsp;&nbsp; if there are more than 10 points, transform the last 10 points to a SIGN ('+')<br>
+
+
+*&nbsp;&nbsp; convert the rest of N points into the digit N<br>*&nbsp;&nbsp; print the result:<br>*&nbsp;&nbsp;&nbsp;&nbsp; for a void result, print 0<br>*&nbsp;&nbsp;&nbsp;&nbsp; for a digit print and remove it<br>*&nbsp;&nbsp;&nbsp;&nbsp; for a '+', print 0, and convert '+' into a point<br>
+
+
+*&nbsp;&nbsp;&nbsp;&nbsp; for a digit and '+', print and remove the digit, and convert '+' into a point<br>*&nbsp;&nbsp; go back to Pattern Space<br>*&nbsp;&nbsp; remove the last processed digits<br>* END_LOOP<br>* if there is a point in HS, print a '1'<br>
+
+
+<br>For a better display of the result, you can pipe the resulting stream via this:<br><br>sed ':a N ; s:\(.*\)\n\(.*\):\2\1:g ; ta;'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # pipe the output via this<br><br>Example: <br><br>sed -f ./add.sed &lt;&lt;X | sed ':a N ; s:\(.*\)\n\(.*\):\2\1:g ; ta;'<br>
+
+
+10<br>101<br>X<br>111<br><br>I followed the principle kiss (keep it simple. stupid). The initial<br></div></div>zeros are displayed, as I did not want to complicate the code.<div class="im"><br>A colleague of mine found a bug (the void set,<br>
+id est the number 0 was not displayed sometimes).<br>
+
+If you find other errors, please report me.<br><font color="#888888"><br><br>Alin<br><br><br>
+</font></div></div><br>
+</div><br>
+
+<p><strong><a href="http://lists.gnu.org/archive/html/help-gnu-utils/2011-02/binr1FzuMidRZ.bin"><img src="add_files/binary.png" alt="Attachment:" width="20" align="left" border="0" height="22"></a>
+<a href="http://lists.gnu.org/archive/html/help-gnu-utils/2011-02/binr1FzuMidRZ.bin"><tt>add.sed</tt></a></strong><br>
+<em>Description:</em> Binary data</p>
+
+<!--X-Body-of-Message-End-->
+<!--X-MsgBody-End-->
+<!--X-Follow-Ups-->
+<hr>
+<form method="post" action="/mp/yyz.py" enctype="multipart/form-data">
+<input name="a" value="as1789" type="hidden">
+<input name="b" value="sed script to add 2 numbers" type="hidden">
+<input name="d" value="AANLkTinUFdUVXAAzSCPUw78S6ou0kCU-ZLZeTzvUKSzk@mail.gmail.com" type="hidden">
+<input name="c" value="gmail.com" type="hidden">
+<center>reply via email to<br><input value=" Alin Soare " type="submit"></center>
+</form>
+<hr>
+<table width="100%">
+<tbody><tr><td align="left">[Prev in Thread]</td>
+<td align="center"><b>Current Thread</b></td>
+<td align="right">[Next in Thread]</td></tr></tbody></table>
+<ul>
+<li><font color="#666666"><strong>sed script to add 2 numbers</strong>,
+<em>Alin Soare</em></font>&nbsp;<b>&lt;=</b>
+</li></ul>
+
+<hr>
+<!--X-Follow-Ups-End-->
+<!--X-References-->
+<!--X-References-End-->
+<!--X-BotPNI-->
+<ul>
+<li>Prev by Date:
+<strong><a href="http://lists.gnu.org/archive/html/help-gnu-utils/2011-02/msg00002.html">Re: Why backquotes in GNU documentation?</a></strong>
+</li>
+<li>Previous by thread:
+<strong><a href="http://lists.gnu.org/archive/html/help-gnu-utils/2011-02/msg00000.html">Why backquotes in GNU documentation?</a></strong>
+</li>
+<li>Index(es):
+<ul>
+<li><a href="http://lists.gnu.org/archive/html/help-gnu-utils/2011-02/index.html#00003"><strong>Date</strong></a></li>
+<li><a href="http://lists.gnu.org/archive/html/help-gnu-utils/2011-02/threads.html#00003"><strong>Thread</strong></a></li>
+</ul>
+</li>
+</ul>
+
+<!--X-BotPNI-End-->
+<!--X-User-Footer-->
+<!--X-User-Footer-End-->
+
+
+</body></html>
