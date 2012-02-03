@@ -1,12 +1,42 @@
 #!/bin/sed -rf
-# BF interpreter.
+# BF interpreter. Inspired by Greg Ubben's awful dc.sed.
 # Supported commands: <>+-[].
-# `.' supported via system (e command). GNU sed only.
-# `,' not yet supported.
+# `.' and `,' supported via system (e command). GNU sed only.
 # 
 
 # remove comments
 s/[^][,.<>+-]//g
+
+### Optimizations
+# replace [-] by Z -- reset current memory cell to zero
+s/\[-\]/Z/g
+
+b no_opt
+
+# Match symmetrical patterns like [->>>+<<<] => MZ>>>I<<<
+# Append lookup table. Allow up to ten ><'s
+s/$/?>>>>>>>>>>;>>>>>>>>>><<<<<<<<<</
+# [->+<]
+: reduce_incr_right
+s/\[-(>+)\+(<+)\]((.*\?)\1(.+);\5.{10}\2)/MZ\1I\2\3/
+t reduce_incr_right
+# [->-<]
+: reduce_decr_right
+s/\[-(>+)\-(<+)\]((.*\?)\1(.+);\5.{10}\2)/MZ\1D\2\3/
+t reduce_decr_right
+s/\?.*$//
+
+# the same for [-<+>] => M<I>
+s/$/?<<<<<<<<<<;<<<<<<<<<<>>>>>>>>>>/
+: reduce_incr_left
+s/\[-(<+)\+(>+)\]((.*\?)\1(.+);\5.{10}\2)/MZ\1I\2\3/
+t reduce_incr_left
+: reduce_decr_left
+s/\[-(<+)\-(>+)\]((.*\?)\1(.+);\5.{10}\2)/MZ\1D\2\3/
+t reduce_decr_left
+s/\?.*$//
+
+: no_opt
 
 # Add program and expression pointers.
 # Expression pointer `|' needed due to
@@ -17,7 +47,10 @@ s/^/%|/
 s/$/;:0,/
 
 
+# Main loop
 : next
+
+#l180
 
 # Remove already evaluated loops
 # because we never get there again.
@@ -53,7 +86,7 @@ s/.*(%\|)/\1/
 	# advance program pointer
 	s/%([^;])/\1%/
 	x
-	s/.*/bash -c 'c=0; read -s -n1 c; printf %d \\"$c'/; e
+	s/.*/bash -c 'c=0; read -n1 c; printf %d \\"$c'/; e
 	b put_to_memory
 }
 # `>' Move right in memory.
@@ -114,6 +147,27 @@ b next
 	# jump back if current memory cell is not zero
 	/:0,/!s/(.*) (p+)\[(.*)%\]\2 /\1% \2[\3]\2 /
 b next
+}
+
+### Process metacommands
+# Reset current memory cell to zero
+/%Z/ {
+	s/:([0-9]+)/:0/
+	b step
+}
+
+# Remember current memory cell
+/%M/ {
+	s/(.*:)([0-9]+)/\2~\1\2/
+	b step
+}
+
+# Add to current memory cell number remembered with M
+/%I/ {
+	# if memory cell empty
+	s/([0-9]+)~(.*:)0,/\2\1/
+	# otherwise -- add
+	#s/([0-9]+)~(.*:)([0-9]),/\2\1/
 }
 
 b
@@ -181,7 +235,7 @@ b next
 # May be optimized.
 # e.g.: |[[]] [] =>  p[ pp[]pp ]p |[]
 # Space used to eliminate unsertainty like in ][ => ]pp[.
-# It is ]pp and [ or ]p and [p?
+# It is ]pp and [ or ]p and p[?
 : mark_brackets
 # p -- parenthesis
 # we are about to loop
@@ -207,6 +261,15 @@ x
 
 # advance expression marker
 s/\|([^;])/\1|/
+
+#/\|;/ {
+#	# if we still inside brackets, read next line of input
+#	G
+#	N
+#	/\n.+$/ {
+#	s/\|;([^\n]*)\n[^\n]*\n([^\n]*)/|\2{;}\1/
+#	}
+#}
 
 # do not mark next independent subexpression yet
 /\]p \|/b mark_brackets_end
