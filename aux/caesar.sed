@@ -11,9 +11,7 @@
 	s/2/11/
 	s/1/dddddddddd/g
 	/[3-9]|d{25}d+/ {
-s/.*//
-i\
-Error: Key must be <= 25
+	s/.*/Error: Key must be <= 25/
 	q
 	}
 	# append from-table
